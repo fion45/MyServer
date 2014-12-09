@@ -66,6 +66,7 @@
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <AdditionalIncludeDirectories />
+      <PrecompiledHeaderOutputFile>F:\Web\MyServer\PushFramework\Debug\$(TargetName).pch</PrecompiledHeaderOutputFile>
     </ClCompile>
     <Link>
       <AdditionalOptions>Winmm.lib %(AdditionalOptions)</AdditionalOptions>

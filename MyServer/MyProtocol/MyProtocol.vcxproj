@@ -49,7 +49,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;MYPROTOCOL_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -57,12 +57,14 @@
       </SDLCheck>
       <AdditionalIncludeDirectories>..\..\PushFramework\include</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>F:\Web\MyServer\MyServer\MyProtocol\Debug\$(TargetName).pch</PrecompiledHeaderOutputFile>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>..\..\output;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ImageHasSafeExceptionHandlers>true</ImageHasSafeExceptionHandlers>
+      <AdditionalDependencies>PushFramework.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -101,7 +103,6 @@
   <ItemGroup>
     <ClCompile Include="base64\base64.cpp" />
     <ClCompile Include="dllmain.cpp" />
-    <ClCompile Include="MyProtocol.cpp" />
     <ClCompile Include="sha1\sha1.cpp" />
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="WebsocketConnectionContext.cpp" />

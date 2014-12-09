@@ -37,7 +37,6 @@
  *
  */
 
-#include "StdAfx.h"
 #include "sha1.h"
 
 

@@ -24,7 +24,6 @@
    René Nyffenegger rene.nyffenegger@adp-gmbh.ch
 
 */
-#include "StdAfx.h"
 #include "base64.h"
 #include <iostream>
 
