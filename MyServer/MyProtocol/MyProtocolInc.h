@@ -1,5 +1,5 @@
 
-#include "WebsocketConnectionContext.h"
+#include "MyConnectionContext.h"
 #include "WebsocketHandshakeMessage.h"
 #include "WebsocketDataMessage.h"
-#include "WebsocketProtocol.h"
+#include "MyProtocol.h"

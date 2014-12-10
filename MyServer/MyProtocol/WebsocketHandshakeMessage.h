@@ -1,8 +1,8 @@
 #pragma once
 #include "Symbols.h"
-#include "WebsocketMessage.h"
+#include "MyMessage.h"
 
-class MYPROTOCOL_API WebsocketHandshakeMessage : public WebsocketMessage {
+class MYPROTOCOL_API WebsocketHandshakeMessage : public MyMessage {
 public:
 	WebsocketHandshakeMessage(char* pRaw, int nSize);
 	WebsocketHandshakeMessage();
@@ -16,6 +16,8 @@ public:
 
 	string Serialize();
 
+	static bool IsHandshakeMessage(char* pRaw);
+	static bool ProcessHandshake(WebsocketHandshakeMessage& request, WebsocketHandshakeMessage& response);
 private:
 	char* pRaw;
 	int nSize;

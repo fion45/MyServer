@@ -57,7 +57,7 @@
       </SDLCheck>
       <AdditionalIncludeDirectories>..\..\PushFramework\include</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
-      <PrecompiledHeaderOutputFile>F:\Web\MyServer\MyServer\MyProtocol\Debug\$(TargetName).pch</PrecompiledHeaderOutputFile>
+      <PrecompiledHeaderOutputFile>$(IntDir)$(TargetName).pch</PrecompiledHeaderOutputFile>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -89,27 +89,32 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="base64\base64.h" />
+    <ClInclude Include="FCIIDefined.h" />
+    <ClInclude Include="MyConnectionContext.h" />
+    <ClInclude Include="MyDataMessage.h" />
+    <ClInclude Include="MyHeartbeatMessage.h" />
     <ClInclude Include="sha1\sha1.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Symbols.h" />
     <ClInclude Include="targetver.h" />
-    <ClInclude Include="WebsocketConnectionContext.h" />
     <ClInclude Include="WebsocketDataMessage.h" />
     <ClInclude Include="WebsocketHandshakeMessage.h" />
-    <ClInclude Include="WebsocketMessage.h" />
-    <ClInclude Include="WebsocketProtocol.h" />
-    <ClInclude Include="WebsocketProtocolInc.h" />
+    <ClInclude Include="MyMessage.h" />
+    <ClInclude Include="MyProtocol.h" />
+    <ClInclude Include="MyProtocolInc.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="base64\base64.cpp" />
     <ClCompile Include="dllmain.cpp" />
+    <ClCompile Include="MyConnectionContext.cpp" />
+    <ClCompile Include="MyDataMessage.cpp" />
+    <ClCompile Include="MyHeartbeatMessage.cpp" />
     <ClCompile Include="sha1\sha1.cpp" />
     <ClCompile Include="stdafx.cpp" />
-    <ClCompile Include="WebsocketConnectionContext.cpp" />
     <ClCompile Include="WebsocketDataMessage.cpp" />
     <ClCompile Include="WebsocketHandshakeMessage.cpp" />
-    <ClCompile Include="WebsocketMessage.cpp" />
-    <ClCompile Include="WebsocketProtocol.cpp" />
+    <ClCompile Include="MyMessage.cpp" />
+    <ClCompile Include="MyProtocol.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

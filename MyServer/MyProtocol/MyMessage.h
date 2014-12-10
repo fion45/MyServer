@@ -2,19 +2,22 @@
 
 #pragma once
 #include "Symbols.h"
+
 // This class is exported from the WebsocketProtocol.dll
-class MYPROTOCOL_API WebsocketMessage : public IncomingPacket, public OutgoingPacket {
+class MYPROTOCOL_API MyMessage : public IncomingPacket, public OutgoingPacket {
 public:
 	enum
 	{
-		Handshake = 0,
-		DataMessage,
+		WSHandshake = 0,
+		WSDataMessage,
+		HeartbeatMessage,
+		DataMessage
 	};
-	WebsocketMessage(int type)
+	MyMessage(int type)
 	{
 		this->type = type;
 	}
-	~WebsocketMessage(void)
+	~MyMessage(void)
 	{
 		//
 	}

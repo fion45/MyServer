@@ -1,9 +1,11 @@
 #include "StdAfx.h"
 #include "WebsocketHandshakeMessage.h"
+#include "base64/base64.h"
+#include "sha1/sha1.h"
 
 
 WebsocketHandshakeMessage::WebsocketHandshakeMessage(char* pRaw, int nSize)
-	:WebsocketMessage(Handshake)
+	:MyMessage(WSHandshake)
 {
 	this->nSize = nSize;
 	this->pRaw = new char[nSize+1];
@@ -12,7 +14,7 @@ WebsocketHandshakeMessage::WebsocketHandshakeMessage(char* pRaw, int nSize)
 }
 
 WebsocketHandshakeMessage::WebsocketHandshakeMessage()
-	:WebsocketMessage(Handshake)
+	:MyMessage(WSHandshake)
 {
     //HTTP/1.1 101 Switching Protocols
    m_version = "HTTP/1.1";
@@ -103,4 +105,64 @@ string WebsocketHandshakeMessage::Serialize( )
 	raw << "\r\n";
 
     return raw.str(); 	
+}
+
+bool WebsocketHandshakeMessage::IsHandshakeMessage(char* pRaw)
+{
+	std::istringstream s(pRaw);
+	//std::istream s(pRaw);
+
+	std::string request;
+
+	// get status line
+	std::getline(s, request);
+
+	if (request[request.size() - 1] == '\r') {
+		request.erase(request.end() - 1);
+
+		std::stringstream ss(request);
+		std::string val;
+
+		std::string tmpMethod, tmpUri, tmpVersion;
+		ss >> tmpMethod;
+		ss >> tmpUri;
+		ss >> tmpVersion;
+		if (tmpMethod.compare("GET") != 0)
+			return false;
+	}
+	else {
+		return false;
+	}
+	return true;
+}
+
+bool WebsocketHandshakeMessage::ProcessHandshake(WebsocketHandshakeMessage& request, WebsocketHandshakeMessage& response)
+{
+	std::string server_key = request.GetField("Sec-WebSocket-Key");
+	server_key += "258EAFA5-E914-47DA-95CA-C5AB0DC85B11";
+
+	SHA1        sha;
+	unsigned int    message_digest[5];
+
+	sha.Reset();
+	sha << server_key.c_str();
+
+	sha.Result(message_digest);
+	// convert sha1 hash bytes to network byte order because this sha1
+	//  library works on ints rather than bytes
+	for (int i = 0; i < 5; i++) {
+		message_digest[i] = htonl(message_digest[i]);
+	}
+
+	server_key = base64_encode(
+		reinterpret_cast<const unsigned char*>
+		(message_digest), 20
+		);
+
+
+	response.SetField("Upgrade", "websocket");
+	response.SetField("Connection", "Upgrade");
+	response.SetField("Sec-WebSocket-Accept", server_key);
+
+	return true;
 }

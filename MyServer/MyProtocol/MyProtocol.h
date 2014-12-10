@@ -1,11 +1,18 @@
 #pragma once
 #include "Symbols.h"
 
-class WebsocketHandshakeMessage;
+enum OperationType
+{
+	HandshakeOpt,
+	HeadbeatOpt,
+	UnknowOpt,
+	UserOpt
+};
+
 // This class is exported from the WebsocketProtocol.dll
-class MYPROTOCOL_API WebsocketProtocol : public Protocol {
+class MYPROTOCOL_API MyProtocol : public Protocol {
 public:
-	WebsocketProtocol(void);
+	MyProtocol(void);
 	// TODO: add your methods here.
     virtual void disposeOutgoingPacket(PushFramework::OutgoingPacket* pPacket)
     {
@@ -22,9 +29,6 @@ public:
 
     virtual int tryDeframeIncomingPacket(PushFramework::DataBuffer& buffer, PushFramework::IncomingPacket*& pPacket, int& serviceId, unsigned int& nExtractedBytes, ConnectionContext* pContext);
     virtual int decodeIncomingPacket(PushFramework::IncomingPacket* pPacket, int& serviceId);
-
-    static bool ProcessHandshake( WebsocketHandshakeMessage& request, WebsocketHandshakeMessage& response );
-	
 
 };
 

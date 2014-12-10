@@ -66,13 +66,13 @@
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <AdditionalIncludeDirectories />
-      <PrecompiledHeaderOutputFile>F:\Web\MyServer\PushFramework\Debug\$(TargetName).pch</PrecompiledHeaderOutputFile>
     </ClCompile>
     <Link>
       <AdditionalOptions>Winmm.lib %(AdditionalOptions)</AdditionalOptions>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">

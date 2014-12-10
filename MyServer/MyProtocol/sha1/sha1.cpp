@@ -36,7 +36,6 @@
  *      bits.
  *
  */
-
 #include "sha1.h"
 
 
