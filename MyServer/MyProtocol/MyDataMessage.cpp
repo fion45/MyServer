@@ -13,9 +13,9 @@ MyDataMessage::MyDataMessage(const char* buffer, int serviceId,int type)
 	FCIIContent* content = (FCIIContent*)mBuffer;
 	switch (content->MainCMD)
 	{
-		case 0:
+	case MC_User:
 		{
-			SetServiceId();
+			SetServiceId(UserOpt);
 			break;
 		}
 	}
