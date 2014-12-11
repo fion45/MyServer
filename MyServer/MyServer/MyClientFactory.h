@@ -1,5 +1,5 @@
 #pragma once
-class MyClientFactory
+class MyClientFactory : public ClientFactory
 {
 public:
 	MyClientFactory();

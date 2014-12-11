@@ -3,8 +3,8 @@
 
 #include "stdafx.h"
 
-#include "WebsocketClientFactory.h"
 #include "RoutedCommunicationService.h"
+#include "MyClientFactory.h"
 #include <process.h>
 
 class MyServer : public Server
@@ -30,9 +30,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	MyServer server;
 	//server.registerService(Routedcommunication, new RoutedCommunicationService, "routed");
 
-
-
-	server.setClientFactory(new WebsocketClientFactory);
+	server.setClientFactory(new MyClientFactory);
 	server.setMaxConnections(100);
 	server.setLoginExpiryDuration(60);
 

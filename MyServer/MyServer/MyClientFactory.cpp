@@ -13,7 +13,40 @@ MyClientFactory::~MyClientFactory()
 
 int MyClientFactory::onFirstRequest(IncomingPacket& _request, ConnectionContext* pConnectionContext, LogicalConnection*& lpClient, OutgoingPacket*& lpPacket)
 {
-	//是否从WebSocket传来的数据
+	MyConnectionContext* pCxt = (MyConnectionContext*)pConnectionContext;
+	switch (pCxt->GetStage())
+	{
+	case MyConnectionContext::HandshakeStage:
+	{
+		WebsocketHandshakeMessage& request = (WebsocketHandshakeMessage&)_request;
+		if (!request.Parse())
+		{
+			return ClientFactory::RefuseAndClose;
+		}
+
+		WebsocketHandshakeMessage *pResponse = new WebsocketHandshakeMessage();
+		if (WebsocketHandshakeMessage::ProcessHandshake(request, *pResponse))
+		{
+			lpPacket = pResponse;
+			pCxt->SetStage(MyConnectionContext::LoginStage);
+		}
+		return ClientFactory::RefuseRequest; // Will not close the connection, but we still wait for login message to create a logical client.
+		break;
+	}
+	case MyConnectionContext::HeartbeatStage:
+	{
+		MyHeartbeatMessage& request = (MyHeartbeatMessage&)_request;
+		//if (!request.Parse())
+		//{
+		//	return ClientFactory::RefuseAndClose;
+		//}
+		//return ClientFactory::RefuseRequest;
+		break;
+	}
+	default:
+		break;
+	}
+
 	return 0;
 }
 
