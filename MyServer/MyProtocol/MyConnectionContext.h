@@ -10,8 +10,12 @@ public:
 		Initialized = 0,
 		HandshakeStage,
 		HeartbeatStage,
-		LoginStage,
 		ConnectedStage
+	};
+	enum
+	{
+		WebSocketProtocol = 1,
+		FCIIProtocol = 2
 	};
 	MyConnectionContext();
 	~MyConnectionContext();
@@ -19,7 +23,13 @@ public:
 	int GetStage();
 	void SetStage(int stage);
 
+	int GetProtocol();
+	void SetProtocol(int protocol);
+
+	bool IsWebSocket();
+	bool IsFCII();
 private:
 	int stage;
+	int protocol;
 };
 

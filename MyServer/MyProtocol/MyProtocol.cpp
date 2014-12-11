@@ -5,6 +5,7 @@
 #include "MyProtocol.h"
 #include "MyConnectionContext.h"
 #include "WebsocketHandshakeMessage.h"
+#include "WebsocketDataMessage.h"
 #include "MyHeartbeatMessage.h"
 #include "MyDataMessage.h"
 
@@ -19,44 +20,77 @@ MyProtocol::MyProtocol()
 
 int MyProtocol::tryDeframeIncomingPacket(PushFramework::DataBuffer& buffer, PushFramework::IncomingPacket*& pPacket, int& serviceId, unsigned int& nExtractedBytes, ConnectionContext* pContext)
 {
-	if (buffer.GetDataSize() == 0)
+	PushFramework::DataBuffer* dbPtr = &buffer;
+	if (dbPtr->GetDataSize() == 0)
 		return Protocol::eIncompletePacket;
 	MyConnectionContext* pCxt = (MyConnectionContext*)pContext;
-	if (pCxt->GetStage() == MyConnectionContext::Initialized)
+	if (pCxt->GetStage() == MyConnectionContext::Initialized && WebsocketHandshakeMessage::IsHandshakeMessage(dbPtr->GetBuffer()))
 	{
-		if (WebsocketHandshakeMessage::IsHandshakeMessage(buffer.GetBuffer()))
-		{
-			WebsocketHandshakeMessage* pMessage = new WebsocketHandshakeMessage(buffer.GetBuffer(), buffer.GetDataSize());
-			serviceId = HandshakeOpt;
-			nExtractedBytes = buffer.GetDataSize();
-			pPacket = pMessage;
-			pCxt->SetStage(MyConnectionContext::HandshakeStage);
-			return Protocol::Success;
-		}
-		else if (MyDataMessage::IsMyDataMessage(buffer.GetBuffer(), buffer.GetDataSize()))
-		{
-			MyHeartbeatMessage* pMessage = new MyHeartbeatMessage(buffer.GetBuffer(), HeadbeatOpt);
-			if (pMessage->GetServiceId() != (int)HeadbeatOpt)
-			{
-				return Protocol::eIncompletePacket;
-			}
-			else
-			{
-				serviceId = HeadbeatOpt;
-				nExtractedBytes = buffer.GetDataSize();
-				pPacket = pMessage;
-				pCxt->SetStage(MyConnectionContext::HeartbeatStage);
-				return Protocol::Success;
-			}
-		}
-		return Protocol::eIncompletePacket;
-	}
-	if (MyDataMessage::IsMyDataMessage(buffer.GetBuffer(), buffer.GetDataSize()))
-	{
-		MyDataMessage* pMessage = new MyDataMessage(buffer.GetBuffer(), UnknowOpt, MyMessage::DataMessage);
-		serviceId = (int)pMessage->GetServiceId();
-		nExtractedBytes = buffer.GetDataSize();
+		WebsocketHandshakeMessage* pMessage = new WebsocketHandshakeMessage(dbPtr->GetBuffer(), dbPtr->GetDataSize());
+		serviceId = HandshakeOpt;
+		nExtractedBytes = dbPtr->GetDataSize();
 		pPacket = pMessage;
+		pCxt->SetStage(MyConnectionContext::HandshakeStage);
+		return Protocol::Success;
+	}
+	else if (pCxt->IsWebSocket())
+	{
+		//In the other cases, we should expect a data message : 
+		int nMinExpectedSize = 6;
+		if (dbPtr->GetDataSize() < nMinExpectedSize)
+			return Protocol::eIncompletePacket;
+
+		BYTE payloadFlags = dbPtr->getAt(0);
+		if (payloadFlags != 129)
+			return Protocol::eUndefinedFailure;
+
+		BYTE basicSize = dbPtr->getAt(1) & 0x7F;
+		unsigned __int64 payloadSize;
+		int masksOffset;
+
+		if (basicSize <= 125)
+		{
+			payloadSize = basicSize;
+			masksOffset = 2;
+		}
+		else if (basicSize == 126)
+		{
+			nMinExpectedSize += 2;
+			if (dbPtr->GetDataSize() < nMinExpectedSize)
+				return Protocol::eIncompletePacket;
+			payloadSize = ntohs(*(u_short*)(dbPtr->GetBuffer() + 2));
+			masksOffset = 4;
+		}
+		else if (basicSize == 127)
+		{
+			nMinExpectedSize += 8;
+			if (dbPtr->GetDataSize() < nMinExpectedSize)
+				return Protocol::eIncompletePacket;
+			payloadSize = ntohl(*(u_long*)(dbPtr->GetBuffer() + 2));
+			masksOffset = 10;
+		}
+		else
+			return Protocol::eUndefinedFailure;
+
+		nMinExpectedSize += payloadSize;
+		if (dbPtr->GetDataSize() < nMinExpectedSize)
+			return Protocol::eIncompletePacket;
+
+		BYTE masks[4];
+		memcpy(masks, dbPtr->GetBuffer() + masksOffset, 4);
+
+		char* payload = new char[payloadSize + 1];
+		memcpy(payload, dbPtr->GetBuffer() + masksOffset + 4, payloadSize);
+		for (unsigned __int64 i = 0; i < payloadSize; i++) {
+			payload[i] = (payload[i] ^ masks[i % 4]);
+		}
+		payload[payloadSize] = '\0';
+
+		WebsocketDataMessage* pMessage = new WebsocketDataMessage(payload, UnknowOpt);
+		
+		dbPtr = pMessage->GetContent
+
+		delete payload;
 		return Protocol::Success;
 	}
 	return Protocol::eIncompletePacket;

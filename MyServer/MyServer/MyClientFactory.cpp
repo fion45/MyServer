@@ -30,6 +30,7 @@ int MyClientFactory::onFirstRequest(IncomingPacket& _request, ConnectionContext*
 			lpPacket = pResponse;
 			pCxt->SetStage(MyConnectionContext::LoginStage);
 		}
+		pCxt->SetProtocol(MyConnectionContext::WebSocketProtocol | MyConnectionContext::FCIIProtocol);
 		return ClientFactory::RefuseRequest; // Will not close the connection, but we still wait for login message to create a logical client.
 		break;
 	}
@@ -41,13 +42,13 @@ int MyClientFactory::onFirstRequest(IncomingPacket& _request, ConnectionContext*
 		//	return ClientFactory::RefuseAndClose;
 		//}
 		//return ClientFactory::RefuseRequest;
+		pCxt->SetProtocol(MyConnectionContext::FCIIProtocol);
 		break;
 	}
 	default:
+		return ClientFactory::RefuseAndClose;
 		break;
 	}
-
-	return 0;
 }
 
 void MyClientFactory::onClientDisconnected(LogicalConnection* pClient)
