@@ -1,24 +1,17 @@
 #include "stdafx.h"
 #include "MyDataMessage.h"
 #include "FCIIDefined.h"
+#include "MyProtocol.h"
 
 
-MyDataMessage::MyDataMessage(const char* buffer, int serviceId,int type)
-	: MyMessage(type)
+MyDataMessage::MyDataMessage(const char* buffer, int serviceId, int type) : MyMessage(type)
 {
 	mServiceId = serviceId;
 	mBLen = strlen(buffer);
 	mBuffer = new char[mBLen];
-	CopyMemory(mBuffer, buffer, mBLen);	
+	CopyMemory(mBuffer, buffer, mBLen);
 	FCIIContent* content = (FCIIContent*)mBuffer;
-	switch (content->MainCMD)
-	{
-	case MC_User:
-		{
-			SetServiceId(UserOpt);
-			break;
-		}
-	}
+	mServiceId = content->MainCMD;
 }
 
 

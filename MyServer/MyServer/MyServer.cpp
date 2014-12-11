@@ -28,7 +28,7 @@ protected:
 int _tmain(int argc, _TCHAR* argv[])
 {
 	MyServer server;
-	server.registerService(Routedcommunication, new RoutedCommunicationService, "routed");
+	//server.registerService(Routedcommunication, new RoutedCommunicationService, "routed");
 
 
 

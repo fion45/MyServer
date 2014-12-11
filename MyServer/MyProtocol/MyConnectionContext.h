@@ -1,7 +1,7 @@
 #pragma once
 #include "Symbols.h"
 
-class MyConnectionContext : public ConnectionContext
+class MYPROTOCOL_API MyConnectionContext : public ConnectionContext
 {
 public:
 	enum

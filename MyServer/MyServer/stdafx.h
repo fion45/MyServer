@@ -32,9 +32,3 @@ using namespace std;
 using namespace PushFramework;
 
 #include <MyProtocolInc.h>
-
-enum OperationType
-{
-	LoginCommunication,
-	Routedcommunication,
-};

@@ -4,17 +4,17 @@
 
 struct FCIIContent
 {
-	UINT16	Identify;
-	UINT16	CheckSum;
-	UINT16	MainCMD;
-	UINT16	SubCMD;
-	UINT16	IsRequest;
-	UINT16	ErrCode;
-	UINT32	DataLen;
-	UINT8*	Data;
+	unsigned short	Identify;
+	unsigned short	CheckSum;
+	unsigned short	MainCMD;
+	unsigned short	SubCMD;
+	unsigned short	IsRequest;
+	unsigned short	ErrCode;
+	unsigned int	DataLen;
+	char*	Data;
 };
 
-class MyDataMessage : public MyMessage
+class MYPROTOCOL_API MyDataMessage : public MyMessage
 {
 public:
 	MyDataMessage(const char* buffer, int serviceId, int type = DataMessage);

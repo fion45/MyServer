@@ -14,7 +14,7 @@ MyClientFactory::~MyClientFactory()
 int MyClientFactory::onFirstRequest(IncomingPacket& _request, ConnectionContext* pConnectionContext, LogicalConnection*& lpClient, OutgoingPacket*& lpPacket)
 {
 	//是否从WebSocket传来的数据
-	return 
+	return 0;
 }
 
 void MyClientFactory::onClientDisconnected(LogicalConnection* pClient)

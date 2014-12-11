@@ -35,11 +35,11 @@ int MyProtocol::tryDeframeIncomingPacket(PushFramework::DataBuffer& buffer, Push
 		else if (MyDataMessage::IsMyDataMessage(buffer.GetBuffer(), buffer.GetDataSize()))
 		{
 			MyHeartbeatMessage* pMessage = new MyHeartbeatMessage(buffer.GetBuffer(), HeadbeatOpt);
-			if (pMessage->GetServiceId() != HeadbeatOpt)
+			//if (pMessage->GetServiceId() != HeadbeatOpt)
 			{
 				return Protocol::eIncompletePacket;
 			}
-			else
+			//else
 			{
 				serviceId = HeadbeatOpt;
 				nExtractedBytes = buffer.GetDataSize();

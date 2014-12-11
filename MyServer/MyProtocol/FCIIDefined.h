@@ -1,11 +1,5 @@
 #pragma once
-enum EMainCMD
+enum EUserSubCMD1
 {
-
-	MC_User = 0x01
-};
-
-enum ESubCMD
-{
-	SC_Login = 0x01
+	USC_Login = 0x01
 };
