@@ -4,10 +4,10 @@
 #include "MyProtocol.h"
 
 
-MyDataMessage::MyDataMessage(const char* buffer, int serviceId, int type) : MyMessage(type)
+MyDataMessage::MyDataMessage(const char* buffer, int bufLen, int serviceId, int type) : MyMessage(type)
 {
 	mServiceId = serviceId;
-	mBLen = strlen(buffer);
+	mBLen = bufLen;
 	mBuffer = new char[mBLen];
 	CopyMemory(mBuffer, buffer, mBLen);
 	if (type != HeartbeatMessage)

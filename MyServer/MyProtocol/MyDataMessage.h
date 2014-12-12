@@ -21,7 +21,7 @@ class MyDataMessage : public MyMessage
 public:
 	const static int CONTENTLEN = sizeof(FCIIContent)-sizeof(char*);
 
-	MyDataMessage(const char* buffer, int serviceId, int type = DataMessage);
+	MyDataMessage(const char* buffer, int bufLen, int serviceId, int type = DataMessage);
 	~MyDataMessage();
 public:
 	void SetServiceId(int serviceId);

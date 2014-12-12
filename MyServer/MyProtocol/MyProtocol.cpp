@@ -24,14 +24,24 @@ int MyProtocol::tryDeframeIncomingPacket(PushFramework::DataBuffer& buffer, Push
 	if (dbPtr->GetDataSize() == 0)
 		return Protocol::eIncompletePacket;
 	MyConnectionContext* pCxt = (MyConnectionContext*)pContext;
-	if (pCxt->GetStage() == MyConnectionContext::Initialized && WebsocketHandshakeMessage::IsHandshakeMessage(dbPtr->GetBuffer()))
+	if (pCxt->GetStage() == MyConnectionContext::Initialized)
 	{
-		WebsocketHandshakeMessage* pMessage = new WebsocketHandshakeMessage(dbPtr->GetBuffer(), dbPtr->GetDataSize());
-		serviceId = HandshakeOpt;
-		nExtractedBytes = dbPtr->GetDataSize();
-		pPacket = pMessage;
-		pCxt->SetStage(MyConnectionContext::HandshakeStage);
-		return Protocol::Success;
+		if (WebsocketHandshakeMessage::IsHandshakeMessage(dbPtr->GetBuffer()))
+		{
+			WebsocketHandshakeMessage* pMessage = new WebsocketHandshakeMessage(dbPtr->GetBuffer(), dbPtr->GetDataSize());
+			serviceId = HandshakeOpt;
+			nExtractedBytes = dbPtr->GetDataSize();
+			pPacket = pMessage;
+			pCxt->SetStage(MyConnectionContext::HandshakeStage);
+			return Protocol::Success;
+		}
+		else if (MyHeartbeatMessage::IsHeartbeatMessage(dbPtr->GetBuffer(), dbPtr->GetDataSize()))
+		{
+			MyHeartbeatMessage* pMessage = new MyHeartbeatMessage(dbPtr->GetBuffer(), dbPtr->GetDataSize(), UnknowOpt);
+
+			pCxt->SetStage(MyConnectionContext::HandshakeStage);
+			return Protocol::Success;
+		}
 	}
 	else if (pCxt->IsWebSocket())
 	{
@@ -87,11 +97,23 @@ int MyProtocol::tryDeframeIncomingPacket(PushFramework::DataBuffer& buffer, Push
 		payload[payloadSize] = '\0';
 
 		WebsocketDataMessage* pMessage = new WebsocketDataMessage(payload, UnknowOpt);
-		
-		dbPtr = pMessage->GetContent
-
 		delete payload;
-		return Protocol::Success;
+
+		if (!pCxt->IsFCII())
+		{
+			serviceId = WebsocketOpt;
+			nExtractedBytes = dbPtr->GetDataSize();
+			pPacket = pMessage;
+			return Protocol::Success;
+		}
+		else
+		{
+
+		}
+	}
+	if (pCxt->IsFCII())
+	{
+		//MyDataMessage* pMessage = new MyDataMessage();
 	}
 	return Protocol::eIncompletePacket;
 }

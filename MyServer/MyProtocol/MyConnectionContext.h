@@ -14,6 +14,7 @@ public:
 	};
 	enum
 	{
+		UnknowedProtocol = 0,
 		WebSocketProtocol = 1,
 		FCIIProtocol = 2
 	};

@@ -5,6 +5,7 @@
 MyConnectionContext::MyConnectionContext()
 {
 	this->stage = Initialized;
+	this->protocol = UnknowedProtocol;
 }
 
 

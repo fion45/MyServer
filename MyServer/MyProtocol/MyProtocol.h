@@ -6,6 +6,7 @@ enum OperationType
 {
 	HandshakeOpt,
 	HeadbeatOpt,
+	WebsocketOpt,
 	UnknowOpt,
 	UserOpt
 };

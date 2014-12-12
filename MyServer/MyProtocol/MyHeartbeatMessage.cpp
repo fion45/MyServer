@@ -2,7 +2,7 @@
 #include "MyHeartbeatMessage.h"
 
 
-MyHeartbeatMessage::MyHeartbeatMessage(const char* buffer, int serviceId)
+MyHeartbeatMessage::MyHeartbeatMessage(const char* buffer, int bufLen, int serviceId)
 	:MyDataMessage(buffer, serviceId, HeartbeatMessage)
 {
 }
@@ -10,4 +10,9 @@ MyHeartbeatMessage::MyHeartbeatMessage(const char* buffer, int serviceId)
 
 MyHeartbeatMessage::~MyHeartbeatMessage()
 {
+}
+
+bool MyHeartbeatMessage::IsHeartbeatMessage(const char* buffer, int bLen)
+{
+	return true;
 }

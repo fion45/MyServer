@@ -28,7 +28,7 @@ int MyClientFactory::onFirstRequest(IncomingPacket& _request, ConnectionContext*
 		if (WebsocketHandshakeMessage::ProcessHandshake(request, *pResponse))
 		{
 			lpPacket = pResponse;
-			pCxt->SetStage(MyConnectionContext::LoginStage);
+			pCxt->SetStage(MyConnectionContext::ConnectedStage);
 		}
 		pCxt->SetProtocol(MyConnectionContext::WebSocketProtocol | MyConnectionContext::FCIIProtocol);
 		return ClientFactory::RefuseRequest; // Will not close the connection, but we still wait for login message to create a logical client.
