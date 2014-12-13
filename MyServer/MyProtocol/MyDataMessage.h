@@ -18,17 +18,20 @@ struct FCIIContent
 
 class MyDataMessage : public MyMessage
 {
+	friend class WebsocketDataMessage;
 public:
 	const static int CONTENTLEN = sizeof(FCIIContent)-sizeof(char*);
-
+	MyDataMessage(int serviceId, int type = DataMessage);
 	MyDataMessage(const char* buffer, int bufLen, int serviceId, int type = DataMessage);
 	~MyDataMessage();
 public:
+	void SetBuffer(const char* buffer,int bufLen);
+
 	void SetServiceId(int serviceId);
 	int GetServiceId();
 
-	bool Encode();
-	bool Decode();
+	//bool Encode();
+	//bool Decode();
 	FCIIContent* GetEncodedData();
 
 	static bool IsMyDataMessage(const char* buffer,int bLen);

@@ -3,15 +3,18 @@
 
 
 WebsocketDataMessage::WebsocketDataMessage(const char* buffer, int serviceId)
-	: MyDataMessage(buffer, serviceId, WSDataMessage)
+	: MyDataMessage(serviceId, WSDataMessage)
 {
+	//Éú³ÉcontentµÄ buffer
+
+
 	jsonStr.assign(buffer);
 	Encode();
 }
 
 WebsocketDataMessage::~WebsocketDataMessage(void)
 {
-	delete[] contentBuf;
+
 }
 
 bool WebsocketDataMessage::Encode()
@@ -27,5 +30,5 @@ bool WebsocketDataMessage::Decode()
 
 FCIIContent WebsocketDataMessage::GetContent()
 {
-	return *((FCIIContent*)contentBuf);
+	return *((FCIIContent*)mBuffer);
 }

@@ -3,6 +3,12 @@
 #include "FCIIDefined.h"
 #include "MyProtocol.h"
 
+MyDataMessage::MyDataMessage(int serviceId, int type) : MyMessage(type)
+{
+	mServiceId = serviceId;
+	mBuffer = NULL;
+	mBLen = 0;
+}
 
 MyDataMessage::MyDataMessage(const char* buffer, int bufLen, int serviceId, int type) : MyMessage(type)
 {
@@ -10,11 +16,8 @@ MyDataMessage::MyDataMessage(const char* buffer, int bufLen, int serviceId, int 
 	mBLen = bufLen;
 	mBuffer = new char[mBLen];
 	CopyMemory(mBuffer, buffer, mBLen);
-	if (type != HeartbeatMessage)
-	{
-		FCIIContent* content = (FCIIContent*)mBuffer;
-		mServiceId = content->MainCMD;
-	}
+	FCIIContent* content = (FCIIContent*)mBuffer;
+	mServiceId = content->MainCMD;
 }
 
 
@@ -23,6 +26,35 @@ MyDataMessage::~MyDataMessage()
 	delete[] mBuffer;
 }
 
+void MyDataMessage::SetBuffer(const char* buffer, int bufLen)
+{
+	if (mBuffer != NULL)
+	{
+		delete[] mBuffer;
+		mBuffer = NULL;
+		mBLen = 0;
+	}
+
+	mBuffer = new char[mBLen];
+	CopyMemory(mBuffer, buffer, mBLen);
+	FCIIContent* content = (FCIIContent*)mBuffer;
+	mServiceId = content->MainCMD;
+}
+
+void MyDataMessage::SetServiceId(int serviceId)
+{
+	mServiceId = serviceId;
+}
+
+int MyDataMessage::GetServiceId()
+{
+	return mServiceId;
+}
+
+FCIIContent* MyDataMessage::GetEncodedData()
+{
+	return (FCIIContent*)mBuffer;
+}
 
 bool MyDataMessage::IsMyDataMessage(const char* buffer, int bLen)
 {
@@ -41,10 +73,4 @@ bool MyDataMessage::IsMyDataMessage(const char* buffer, int bLen)
 		return false;
 	return true;
 }
-
-int MyDataMessage::GetServiceId()
-{
-	return mServiceId;
-}
-
 
