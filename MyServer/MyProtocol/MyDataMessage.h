@@ -29,13 +29,19 @@ public:
 
 	bool Encode();
 	bool Decode();
-	FCIIContent* GetEncodedData();
+	FCIIContent* GetEncodedData()
+	{
+		return mContent;
+	}
+	int GetBufLen();
 
 	static bool IsMyDataMessage(const char* buffer,int bLen);
 private:
 	int mServiceId;
 	char* mBuffer;
 	int mBLen;
+
+	FCIIContent* mContent;
 };
 
 #endif

@@ -20,26 +20,33 @@ MyProtocol::MyProtocol()
 
 int MyProtocol::tryDeframeIncomingPacket(PushFramework::DataBuffer& buffer, PushFramework::IncomingPacket*& pPacket, int& serviceId, unsigned int& nExtractedBytes, ConnectionContext* pContext)
 {
-	PushFramework::DataBuffer* dbPtr = &buffer;
-	if (dbPtr->GetDataSize() == 0)
+	serviceId = UnknowOpt;
+	nExtractedBytes = 0;
+	pPacket = NULL;
+	bool delTag = false;
+	char* tmpBuffer = buffer.GetBuffer();
+	int tmpBLen = buffer.GetDataSize();
+	if (tmpBLen == 0)
 		return Protocol::eIncompletePacket;
 	MyConnectionContext* pCxt = (MyConnectionContext*)pContext;
 	if (pCxt->GetStage() == MyConnectionContext::Initialized)
 	{
-		if (WebsocketHandshakeMessage::IsHandshakeMessage(dbPtr->GetBuffer()))
+		if (WebsocketHandshakeMessage::IsHandshakeMessage(tmpBuffer))
 		{
-			WebsocketHandshakeMessage* pMessage = new WebsocketHandshakeMessage(dbPtr->GetBuffer(), dbPtr->GetDataSize());
+			WebsocketHandshakeMessage* pMessage = new WebsocketHandshakeMessage(tmpBuffer, tmpBLen);
 			serviceId = HandshakeOpt;
-			nExtractedBytes = dbPtr->GetDataSize();
+			nExtractedBytes = tmpBLen;
 			pPacket = pMessage;
 			pCxt->SetStage(MyConnectionContext::HandshakeStage);
 			return Protocol::Success;
 		}
-		else if (MyHeartbeatMessage::IsHeartbeatMessage(dbPtr->GetBuffer(), dbPtr->GetDataSize()))
+		else if (MyHeartbeatMessage::IsHeartbeatMessage(tmpBuffer, tmpBLen))
 		{
-			MyHeartbeatMessage* pMessage = new MyHeartbeatMessage(dbPtr->GetBuffer(), dbPtr->GetDataSize(), UnknowOpt);
-
-			pCxt->SetStage(MyConnectionContext::HandshakeStage);
+			MyHeartbeatMessage* pMessage = new MyHeartbeatMessage(tmpBuffer, tmpBLen, UnknowOpt);
+			serviceId = HeadbeatOpt;
+			nExtractedBytes = tmpBLen;
+			pPacket = pMessage;
+			pCxt->SetStage(MyConnectionContext::HeartbeatStage);
 			return Protocol::Success;
 		}
 	}
@@ -47,14 +54,14 @@ int MyProtocol::tryDeframeIncomingPacket(PushFramework::DataBuffer& buffer, Push
 	{
 		//In the other cases, we should expect a data message : 
 		int nMinExpectedSize = 6;
-		if (dbPtr->GetDataSize() < nMinExpectedSize)
+		if (tmpBLen < nMinExpectedSize)
 			return Protocol::eIncompletePacket;
 
-		BYTE payloadFlags = dbPtr->getAt(0);
+		BYTE payloadFlags = tmpBuffer[0];
 		if (payloadFlags != 129)
 			return Protocol::eUndefinedFailure;
 
-		BYTE basicSize = dbPtr->getAt(1) & 0x7F;
+		BYTE basicSize = tmpBuffer[1] & 0x7F;
 		unsigned __int64 payloadSize;
 		int masksOffset;
 
@@ -66,54 +73,69 @@ int MyProtocol::tryDeframeIncomingPacket(PushFramework::DataBuffer& buffer, Push
 		else if (basicSize == 126)
 		{
 			nMinExpectedSize += 2;
-			if (dbPtr->GetDataSize() < nMinExpectedSize)
+			if (tmpBLen < nMinExpectedSize)
 				return Protocol::eIncompletePacket;
-			payloadSize = ntohs(*(u_short*)(dbPtr->GetBuffer() + 2));
+			payloadSize = ntohs(*(u_short*)(tmpBuffer + 2));
 			masksOffset = 4;
 		}
 		else if (basicSize == 127)
 		{
 			nMinExpectedSize += 8;
-			if (dbPtr->GetDataSize() < nMinExpectedSize)
+			if (tmpBLen < nMinExpectedSize)
 				return Protocol::eIncompletePacket;
-			payloadSize = ntohl(*(u_long*)(dbPtr->GetBuffer() + 2));
+			payloadSize = ntohl(*(u_long*)(tmpBuffer + 2));
 			masksOffset = 10;
 		}
 		else
 			return Protocol::eUndefinedFailure;
 
 		nMinExpectedSize += payloadSize;
-		if (dbPtr->GetDataSize() < nMinExpectedSize)
+		if (tmpBLen < nMinExpectedSize)
 			return Protocol::eIncompletePacket;
 
 		BYTE masks[4];
-		memcpy(masks, dbPtr->GetBuffer() + masksOffset, 4);
+		memcpy(masks, tmpBuffer + masksOffset, 4);
 
 		char* payload = new char[payloadSize + 1];
-		memcpy(payload, dbPtr->GetBuffer() + masksOffset + 4, payloadSize);
+		memcpy(payload, tmpBuffer + masksOffset + 4, payloadSize);
 		for (unsigned __int64 i = 0; i < payloadSize; i++) {
 			payload[i] = (payload[i] ^ masks[i % 4]);
 		}
 		payload[payloadSize] = '\0';
 
 		WebsocketDataMessage* pMessage = new WebsocketDataMessage(payload, UnknowOpt);
-		delete payload;
+		delete[] payload;
 
 		if (!pCxt->IsFCII())
 		{
 			serviceId = WebsocketOpt;
-			nExtractedBytes = dbPtr->GetDataSize();
+			nExtractedBytes = tmpBLen;
 			pPacket = pMessage;
 			return Protocol::Success;
 		}
 		else
 		{
-
+			FCIIContent* contentPtr = &pMessage->GetContent();
+			tmpBLen = contentPtr->DataLen + MyDataMessage::CONTENTLEN;
+			tmpBuffer = new char[tmpBLen + 1];
+			memcpy(tmpBuffer, contentPtr, tmpBLen);
+			tmpBuffer[tmpBLen] = '\0';
+			delete pMessage;
+			delTag = true;
+			serviceId = UnknowOpt;
 		}
 	}
 	if (pCxt->IsFCII())
 	{
-		//MyDataMessage* pMessage = new MyDataMessage();
+		MyDataMessage* pMessage = new MyDataMessage(tmpBuffer, tmpBLen, UnknowOpt);
+		if (delTag)
+		{
+			delete[] tmpBuffer;
+		}
+		pPacket = pMessage;
+		serviceId = pMessage->GetServiceId();
+		nExtractedBytes = pMessage->GetBufLen();
+		return Protocol::Success;
 	}
 	return Protocol::eIncompletePacket;
 }

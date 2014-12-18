@@ -12,8 +12,8 @@ MyDataMessage::MyDataMessage(const char* buffer, int bufLen, int serviceId, int 
 	CopyMemory(mBuffer, buffer, mBLen);
 	if (type != HeartbeatMessage)
 	{
-		FCIIContent* content = (FCIIContent*)mBuffer;
-		mServiceId = content->MainCMD;
+		mContent = (FCIIContent*)mBuffer;
+		mServiceId = mContent->MainCMD;
 	}
 }
 
@@ -47,4 +47,7 @@ int MyDataMessage::GetServiceId()
 	return mServiceId;
 }
 
-
+int MyDataMessage::GetBufLen()
+{
+	return mBLen;
+}
