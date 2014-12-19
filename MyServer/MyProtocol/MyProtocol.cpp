@@ -115,23 +115,30 @@ int MyProtocol::tryDeframeIncomingPacket(PushFramework::DataBuffer& buffer, Push
 		}
 		else
 		{
-			FCIIContent* contentPtr = &pMessage->GetContent();
-			tmpBLen = contentPtr->DataLen + MyDataMessage::CONTENTLEN;
-			tmpBuffer = new char[tmpBLen + 1];
-			memcpy(tmpBuffer, contentPtr, tmpBLen);
-			tmpBuffer[tmpBLen] = '\0';
-			delete pMessage;
-			delTag = true;
 			serviceId = UnknowOpt;
+			if (pMessage->IsFCIIData())
+			{
+				FCIIContent* contentPtr = &pMessage->GetContent();
+				tmpBLen = contentPtr->DataLen + MyDataMessage::CONTENTLEN;
+				tmpBuffer = new char[tmpBLen + 1];
+				memcpy(tmpBuffer, contentPtr, tmpBLen);
+				tmpBuffer[tmpBLen] = '\0';
+				delete pMessage;
+				delTag = true;
+			}
+			else
+			{
+				nExtractedBytes = 0;
+				pPacket = NULL;
+				return Protocol::eIncompletePacket;
+			}
 		}
 	}
 	if (pCxt->IsFCII())
 	{
 		MyDataMessage* pMessage = new MyDataMessage(tmpBuffer, tmpBLen, UnknowOpt);
 		if (delTag)
-		{
 			delete[] tmpBuffer;
-		}
 		pPacket = pMessage;
 		serviceId = pMessage->GetServiceId();
 		nExtractedBytes = pMessage->GetBufLen();

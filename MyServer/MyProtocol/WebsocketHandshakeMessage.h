@@ -2,7 +2,7 @@
 #include "Symbols.h"
 #include "MyMessage.h"
 
-class WebsocketHandshakeMessage : public MyMessage {
+class MYPROTOCOL_API WebsocketHandshakeMessage : public MyMessage {
 public:
 	WebsocketHandshakeMessage(char* pRaw, int nSize);
 	WebsocketHandshakeMessage();

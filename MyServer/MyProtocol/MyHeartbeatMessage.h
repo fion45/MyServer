@@ -2,7 +2,7 @@
 #include "Symbols.h"
 #include "MyDataMessage.h"
 
-class MyHeartbeatMessage : public MyDataMessage
+class MYPROTOCOL_API MyHeartbeatMessage : public MyDataMessage
 {
 public:
 	MyHeartbeatMessage(const char* buffer, int bufLen,int serviceId);

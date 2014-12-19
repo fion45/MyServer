@@ -16,6 +16,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MyProtocol", "MyServer\MyPr
 		{D208CCA6-2919-4B12-BF98-113AFB5B72C1} = {D208CCA6-2919-4B12-BF98-113AFB5B72C1}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Common", "Common\Common.vcxproj", "{E364DFFF-6FF0-40E8-A6CF-44DC532559F8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -56,6 +58,16 @@ Global
 		{21938FB5-C337-4285-B916-18E9ED8C5354}.Release|Mixed Platforms.Build.0 = Release|Win32
 		{21938FB5-C337-4285-B916-18E9ED8C5354}.Release|Win32.ActiveCfg = Release|Win32
 		{21938FB5-C337-4285-B916-18E9ED8C5354}.Release|Win32.Build.0 = Release|Win32
+		{E364DFFF-6FF0-40E8-A6CF-44DC532559F8}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{E364DFFF-6FF0-40E8-A6CF-44DC532559F8}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
+		{E364DFFF-6FF0-40E8-A6CF-44DC532559F8}.Debug|Mixed Platforms.Build.0 = Debug|Win32
+		{E364DFFF-6FF0-40E8-A6CF-44DC532559F8}.Debug|Win32.ActiveCfg = Debug|Win32
+		{E364DFFF-6FF0-40E8-A6CF-44DC532559F8}.Debug|Win32.Build.0 = Debug|Win32
+		{E364DFFF-6FF0-40E8-A6CF-44DC532559F8}.Release|Any CPU.ActiveCfg = Release|Win32
+		{E364DFFF-6FF0-40E8-A6CF-44DC532559F8}.Release|Mixed Platforms.ActiveCfg = Release|Win32
+		{E364DFFF-6FF0-40E8-A6CF-44DC532559F8}.Release|Mixed Platforms.Build.0 = Release|Win32
+		{E364DFFF-6FF0-40E8-A6CF-44DC532559F8}.Release|Win32.ActiveCfg = Release|Win32
+		{E364DFFF-6FF0-40E8-A6CF-44DC532559F8}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

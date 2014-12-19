@@ -17,10 +17,17 @@ MyDataMessage::MyDataMessage(const char* buffer, int bufLen, int serviceId, int 
 	}
 }
 
+MyDataMessage::MyDataMessage(int serviceId, int type) : MyMessage(type)
+{
+	mServiceId = serviceId;
+	mBLen = 0;
+	mBuffer = NULL;
+}
+
 
 MyDataMessage::~MyDataMessage()
 {
-	delete[] mBuffer;
+	SAFE_DELETEARRPTR(mBuffer);
 }
 
 

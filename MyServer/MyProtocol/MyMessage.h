@@ -2,7 +2,7 @@
 #include "Symbols.h"
 
 // This class is exported from the WebsocketProtocol.dll
-class MyMessage : public IncomingPacket, public OutgoingPacket 
+class MYPROTOCOL_API MyMessage : public IncomingPacket, public OutgoingPacket
 {
 public:
 	enum

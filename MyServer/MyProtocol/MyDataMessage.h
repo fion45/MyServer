@@ -4,7 +4,7 @@
 #include "Symbols.h"
 #include "MyMessage.h"
 
-struct FCIIContent
+struct MYPROTOCOL_API FCIIContent
 {
 	UINT16	Identify;
 	UINT16	CheckSum;
@@ -16,19 +16,21 @@ struct FCIIContent
 	char*	Data;
 };
 
-class MyDataMessage : public MyMessage
+class MYPROTOCOL_API MyDataMessage : public MyMessage
 {
+	friend class WebsocketDataMessage;
 public:
 	const static int CONTENTLEN = sizeof(FCIIContent)-sizeof(char*);
 
+	MyDataMessage(int serviceId, int type = DataMessage);
 	MyDataMessage(const char* buffer, int bufLen, int serviceId, int type = DataMessage);
 	~MyDataMessage();
 public:
 	void SetServiceId(int serviceId);
 	int GetServiceId();
 
-	bool Encode();
-	bool Decode();
+	//bool Encode();
+	//bool Decode();
 	FCIIContent* GetEncodedData()
 	{
 		return mContent;

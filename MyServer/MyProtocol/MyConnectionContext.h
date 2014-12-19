@@ -2,7 +2,7 @@
 #include "Symbols.h"
 #include "Protocol.h"
 
-class MyConnectionContext : public PushFramework::ConnectionContext
+class MYPROTOCOL_API MyConnectionContext : public PushFramework::ConnectionContext
 {
 public:
 	enum

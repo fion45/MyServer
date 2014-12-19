@@ -2,16 +2,22 @@
 #include "Symbols.h"
 #include "MyDataMessage.h"
 
-class WebsocketDataMessage : public MyDataMessage
+class MYPROTOCOL_API WebsocketDataMessage : public MyDataMessage
 {
 private:
-	string jsonStr;
+	string mJsonStr;
+	bool mIsFCIIDataTag = false;
 public:
 	WebsocketDataMessage(const char* buffer, int serviceId);
 	~WebsocketDataMessage(void);
 	
-    bool Encode();
-	bool Decode();
+ //   bool Encode();
+	//bool Decode();
+
+	bool IsFCIIData()
+	{
+		return mIsFCIIDataTag;
+	}
 
 	FCIIContent GetContent();
 };

@@ -12,7 +12,7 @@ enum OperationType
 };
 
 // This class is exported from the WebsocketProtocol.dll
-class MyProtocol : public PushFramework::Protocol {
+class MYPROTOCOL_API MyProtocol : public PushFramework::Protocol {
 public:
 	MyProtocol(void);
 	// TODO: add your methods here.
