@@ -14,5 +14,10 @@ MyHeartbeatMessage::~MyHeartbeatMessage()
 
 bool MyHeartbeatMessage::IsHeartbeatMessage(const char* buffer, int bLen)
 {
-	return true;
+	if (MyDataMessage::IsMyDataMessage(buffer, bLen))
+	{
+		FCIIContent* content = (FCIIContent*)buffer;
+		return content->MainCMD == MC_Manager && content->SubCMD == M_SC_Heartbeat;
+	}
+	return false;
 }

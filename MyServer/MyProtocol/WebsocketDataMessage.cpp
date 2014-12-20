@@ -12,18 +12,36 @@ WebsocketDataMessage::WebsocketDataMessage(const char* buffer, int serviceId)
 	Json::Value root;
 	if (reader.parse(mJsonStr, root))
 	{
-		UINT tmpIdentify = root["Identify"].asUInt();
-		UINT tmpCheckSum = root["CheckSum"].asUInt();
-		UINT tmpMainCMD = root["MainCMD"].asUInt();
-		UINT tmpSubCMD = root["SubCMD"].asUInt();
-		UINT tmpIsRequest = root["IsRequest"].asUInt();
-		UINT tmpErrCode = root["ErrCode"].asUInt();
-		UINT tmpDataLen = root["DataLen"].asUInt();
+		UINT16 tmpIdentify = root["Identify"].asUInt();
+		UINT16 tmpCheckSum = root["CheckSum"].asUInt();
+		UINT16 tmpMainCMD = root["MainCMD"].asUInt();
+		UINT16 tmpSubCMD = root["SubCMD"].asUInt();
+		UINT16 tmpIsRequest = root["IsRequest"].asUInt();
+		UINT16 tmpErrCode = root["ErrCode"].asUInt();
+		UINT32 tmpDataLen = root["DataLen"].asUInt();
 		string tmpData = root["Data"].asString();
 
 		mServiceId = tmpMainCMD;
 		mBLen = MyDataMessage::CONTENTLEN + tmpDataLen;
 		mBuffer = new char[mBLen];
+		char* bufPtr = mBuffer;
+		int UINT16Size = sizeof(UINT16), UINT32Size = sizeof(UINT32);
+		*(UINT16*)bufPtr = tmpIdentify;
+		bufPtr += UINT16Size;
+		*(UINT16*)bufPtr = tmpCheckSum;
+		bufPtr += UINT16Size;
+		*(UINT16*)bufPtr = tmpMainCMD;
+		bufPtr += UINT16Size;
+		*(UINT16*)bufPtr = tmpSubCMD;
+		bufPtr += UINT16Size;
+		*(UINT16*)bufPtr = tmpIsRequest;
+		bufPtr += UINT16Size;
+		*(UINT16*)bufPtr = tmpErrCode;
+		bufPtr += UINT16Size;
+		*(UINT32*)bufPtr = tmpDataLen;
+		bufPtr += UINT32Size;
+		CopyMemory(bufPtr, tmpData.data(), tmpData.length());
+		mContent = (FCIIContent*)mBuffer;
 
 		mIsFCIIDataTag = true;
 	}
@@ -51,7 +69,7 @@ WebsocketDataMessage::~WebsocketDataMessage(void)
 //	return true;
 //}
 
-FCIIContent WebsocketDataMessage::GetContent()
+FCIIContent* WebsocketDataMessage::GetContent()
 {
-	return *((FCIIContent*)mBuffer);
+	return mContent;
 }

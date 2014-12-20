@@ -4,6 +4,16 @@
 #include "Symbols.h"
 #include "MyMessage.h"
 
+enum MainCMDEnum
+{
+	MC_Manager = 0
+};
+
+enum ManagerSubCMDEnum
+{
+	M_SC_Heartbeat = 0
+};
+
 struct MYPROTOCOL_API FCIIContent
 {
 	UINT16	Identify;
@@ -12,6 +22,8 @@ struct MYPROTOCOL_API FCIIContent
 	UINT16	SubCMD;
 	UINT16	IsRequest;
 	UINT16	ErrCode;
+	UINT16	NextIdentify;
+	UINT16	Reserve;
 	UINT32	DataLen;
 	char*	Data;
 };
@@ -19,6 +31,7 @@ struct MYPROTOCOL_API FCIIContent
 class MYPROTOCOL_API MyDataMessage : public MyMessage
 {
 	friend class WebsocketDataMessage;
+	friend class MyHeartbeatMessage;
 public:
 	const static int CONTENTLEN = sizeof(FCIIContent)-sizeof(char*);
 

@@ -10,9 +10,9 @@ MyDataMessage::MyDataMessage(const char* buffer, int bufLen, int serviceId, int 
 	mBLen = bufLen;
 	mBuffer = new char[mBLen];
 	CopyMemory(mBuffer, buffer, mBLen);
+	mContent = (FCIIContent*)mBuffer;
 	if (type != HeartbeatMessage)
 	{
-		mContent = (FCIIContent*)mBuffer;
 		mServiceId = mContent->MainCMD;
 	}
 }

@@ -19,6 +19,6 @@ public:
 		return mIsFCIIDataTag;
 	}
 
-	FCIIContent GetContent();
+	FCIIContent* GetContent();
 };
 
