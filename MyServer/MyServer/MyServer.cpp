@@ -3,6 +3,7 @@
 
 #include "stdafx.h"
 
+#include "WebsocketService.h"
 #include "RoutedCommunicationService.h"
 #include "MyClientFactory.h"
 #include <process.h>
@@ -28,7 +29,7 @@ protected:
 int _tmain(int argc, _TCHAR* argv[])
 {
 	MyServer server;
-	//server.registerService(Routedcommunication, new RoutedCommunicationService, "routed");
+	server.registerService(WebsocketOpt, new WebsocketService, "WebService");
 
 	server.setClientFactory(new MyClientFactory);
 	server.setMaxConnections(100);

@@ -11,6 +11,7 @@ MyDataMessage::MyDataMessage(const char* buffer, int bufLen, int serviceId, int 
 	mBuffer = new char[mBLen];
 	CopyMemory(mBuffer, buffer, mBLen);
 	mContent = (FCIIContent*)mBuffer;
+	
 	if (type != HeartbeatMessage)
 	{
 		mServiceId = mContent->MainCMD;
@@ -28,6 +29,7 @@ MyDataMessage::MyDataMessage(int serviceId, int type) : MyMessage(type)
 MyDataMessage::~MyDataMessage()
 {
 	SAFE_DELETEARRPTR(mBuffer);
+	SAFE_DELETEARRPTR(mDataBuf);
 }
 
 
@@ -42,7 +44,7 @@ bool MyDataMessage::IsMyDataMessage(const char* buffer, int bLen)
 	UINT16 tmpCS = 0;
 	for (int i = 0; i < content->DataLen; i++)
 	{
-		tmpCS += *(content->Data + i);
+		tmpCS += *(&(content->Data) + i);
 	}
 	if (tmpCS != content->CheckSum)
 		return false;
@@ -57,4 +59,39 @@ int MyDataMessage::GetServiceId()
 int MyDataMessage::GetBufLen()
 {
 	return mBLen;
+}
+
+bool MyDataMessage::IsEnd()
+{
+	return GetContentData() != NULL;
+}
+
+char* MyDataMessage::GetContentData()
+{
+	if (mDataBuf == NULL)
+	{
+		if (mContent->Identify == mContent->NextIdentify)
+		{
+			mDataBuf = new char[mContent->DataLen];
+			CopyMemory(mDataBuf, &(mContent->Data), mContent->DataLen);
+		}
+		else
+		{
+			int tmpLen = mBLen;
+			mDataBuf = new char[tmpLen];
+			char* bufPtr = mBuffer;
+			//FCIIContent* content = mContent;
+			//CopyMemory(mDataBuf, &(content->Data), content->DataLen);
+			FCIIContent* content;
+			do
+			{
+				content = (FCIIContent*)bufPtr;
+				CopyMemory(mDataBuf, &(content->Data), content->DataLen);
+				bufPtr += (MyDataMessage::CONTENTLEN + content->DataLen);
+			} while (bufPtr - mBuffer < mBLen && content->Identify != content->NextIdentify);
+			if (content->Identify != content->NextIdentify)
+				SAFE_DELETEARRPTR(mDataBuf);
+		}
+	}
+	return mDataBuf;
 }

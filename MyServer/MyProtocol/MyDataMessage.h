@@ -25,7 +25,7 @@ struct MYPROTOCOL_API FCIIContent
 	UINT16	NextIdentify;
 	UINT16	Reserve;
 	UINT32	DataLen;
-	char*	Data;
+	char	Data;
 };
 
 class MYPROTOCOL_API MyDataMessage : public MyMessage
@@ -42,10 +42,15 @@ public:
 	void SetServiceId(int serviceId);
 	int GetServiceId();
 
+	bool IsEnd();
+
+	char* GetContentData();
+
 	//bool Encode();
 	//bool Decode();
 	FCIIContent* GetEncodedData()
 	{
+		//如果是多包的组合则只获得第一个包
 		return mContent;
 	}
 	int GetBufLen();
@@ -57,6 +62,8 @@ private:
 	int mBLen;
 
 	FCIIContent* mContent;
+
+	char* mDataBuf;
 };
 
 #endif

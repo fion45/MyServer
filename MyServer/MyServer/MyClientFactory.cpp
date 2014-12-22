@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "MyClientFactory.h"
+#include "MySocketClient.h"
 
 
 MyClientFactory::MyClientFactory()
@@ -31,7 +32,7 @@ int MyClientFactory::onFirstRequest(IncomingPacket& _request, ConnectionContext*
 			pCxt->SetStage(MyConnectionContext::ConnectedStage);
 		}
 		pCxt->SetProtocol(MyConnectionContext::WebSocketProtocol | MyConnectionContext::FCIIProtocol);
-		return ClientFactory::RefuseRequest; // Will not close the connection, but we still wait for login message to create a logical client.
+		return ClientFactory::RefuseAndClose; // Will not close the connection, but we still wait for login message to create a logical client.
 		break;
 	}
 	case MyConnectionContext::HeartbeatStage:
@@ -43,6 +44,13 @@ int MyClientFactory::onFirstRequest(IncomingPacket& _request, ConnectionContext*
 		//}
 		//return ClientFactory::RefuseRequest;
 		pCxt->SetProtocol(MyConnectionContext::FCIIProtocol);
+		return ClientFactory::RefuseRequest;
+		break;
+	}
+	case MyConnectionContext::ConnectedStage:
+	{
+		//需确定连接成功,查询数据库
+
 		break;
 	}
 	default:

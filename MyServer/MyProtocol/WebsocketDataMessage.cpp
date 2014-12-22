@@ -18,6 +18,8 @@ WebsocketDataMessage::WebsocketDataMessage(const char* buffer, int serviceId)
 		UINT16 tmpSubCMD = root["SubCMD"].asUInt();
 		UINT16 tmpIsRequest = root["IsRequest"].asUInt();
 		UINT16 tmpErrCode = root["ErrCode"].asUInt();
+		UINT16 tmpNextIdentify = root["NextIdentify"].asUInt();
+		UINT16 tmpReserve = root["Reserve"].asUInt();
 		UINT32 tmpDataLen = root["DataLen"].asUInt();
 		string tmpData = root["Data"].asString();
 
@@ -37,6 +39,10 @@ WebsocketDataMessage::WebsocketDataMessage(const char* buffer, int serviceId)
 		*(UINT16*)bufPtr = tmpIsRequest;
 		bufPtr += UINT16Size;
 		*(UINT16*)bufPtr = tmpErrCode;
+		bufPtr += UINT16Size;
+		*(UINT16*)bufPtr = tmpNextIdentify;
+		bufPtr += UINT16Size;
+		*(UINT16*)bufPtr = tmpReserve;
 		bufPtr += UINT16Size;
 		*(UINT32*)bufPtr = tmpDataLen;
 		bufPtr += UINT32Size;
