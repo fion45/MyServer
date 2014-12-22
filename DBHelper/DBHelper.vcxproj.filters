@@ -27,12 +27,18 @@
     <ClInclude Include="otlv4.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="BaseHelper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="dllmain.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseHelper.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
