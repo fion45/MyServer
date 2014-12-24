@@ -9,9 +9,21 @@ BOOL APIENTRY DllMain( HMODULE hModule,
 	switch (ul_reason_for_call)
 	{
 	case DLL_PROCESS_ATTACH:
+	{
+		otl_connect::otl_initialize(); // initialize ODBC environment
+		try
+		{
+			db.rlogon("scott/tiger@mssql2008"); // connect to ODBC
+		}
+		catch (otl_exception& p){ // intercept OTL exceptions
+
+		}
+		break;
+	}
 	case DLL_THREAD_ATTACH:
 	case DLL_THREAD_DETACH:
 	case DLL_PROCESS_DETACH:
+		db.logoff(); // disconnect from ODBC
 		break;
 	}
 	return TRUE;
