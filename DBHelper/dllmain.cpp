@@ -13,7 +13,7 @@ BOOL APIENTRY DllMain( HMODULE hModule,
 		otl_connect::otl_initialize(); // initialize ODBC environment
 		try
 		{
-			db.rlogon("scott/tiger@mssql2008"); // connect to ODBC
+			db.rlogon("UID=sa;PWD=1234;DSN=RGServer"); // connect to ODBC
 		}
 		catch (otl_exception& p){ // intercept OTL exceptions
 
@@ -21,7 +21,9 @@ BOOL APIENTRY DllMain( HMODULE hModule,
 		break;
 	}
 	case DLL_THREAD_ATTACH:
+		break;
 	case DLL_THREAD_DETACH:
+		break;
 	case DLL_PROCESS_DETACH:
 		db.logoff(); // disconnect from ODBC
 		break;

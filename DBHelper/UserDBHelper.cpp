@@ -116,7 +116,8 @@ bool UserDBHelper::Login(string LoginID, string LoginPSW)
 	void* argArr[2];
 	argArr[0] = &LoginID;
 	argArr[1] = &LoginPSW;
-	if (GetByWhere(UserArr, UserArrLen, "LoginID=:f1<char[10000]> AND LoginPSW=:f2<char[10000]>", argArr, 2))
+	//if (GetByWhere(UserArr, UserArrLen, "LoginID=:f1<char[10000]> and LoginPSW=:f2<char[10000]>", argArr, 2))
+	if (GetByWhere(UserArr, UserArrLen, "LoginID='" + LoginID + "' and LoginPSW='" + LoginPSW + "'", NULL, 0))
 	{
 
 		return UserArrLen == 1;

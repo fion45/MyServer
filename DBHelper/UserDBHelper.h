@@ -10,7 +10,7 @@ struct DBHELPER_API SUser
 	string LoginID;
 	string LoginPSW;
 	string Email;
-	BOOL Sex;
+	BYTE Sex;
 	int DefaultAddrID;
 	string Permission;
 	int Gift;

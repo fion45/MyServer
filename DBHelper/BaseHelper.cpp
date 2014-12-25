@@ -53,8 +53,8 @@ bool BaseHelper::GetByWhere(void** &ObjArr, int &ArrLen, string where, void** ar
 {
 	otl_stream i;
 	SetColumnType(i); // use a int instead of default double
-	i.open(50, // buffer size
-		("select * from " + mTableName + " " + where).data(),
+	i.open(500, // buffer size
+		("select * from " + mTableName + " where " + where).data(),
 		db // connect object
 		);
 	for (int i = 0; i < argArrLen; i++)
