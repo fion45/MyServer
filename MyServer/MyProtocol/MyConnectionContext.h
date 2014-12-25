@@ -10,7 +10,8 @@ public:
 		Initialized = 0,
 		HandshakeStage,
 		HeartbeatStage,
-		ConnectedStage
+		ConnectedStage,
+		LoginedStage
 	};
 	enum
 	{

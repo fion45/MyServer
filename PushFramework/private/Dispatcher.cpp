@@ -236,7 +236,6 @@ void Dispatcher::ProcessFirstPacket(PhysicalConnection* pChannel, unsigned int u
         pChannel->Close(false);
         return;
     }
-    //
     if (iResult == ClientFactory::RefuseRequest)
     {
         if (pOutPacket)

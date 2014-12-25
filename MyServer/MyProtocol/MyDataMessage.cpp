@@ -72,13 +72,15 @@ char* MyDataMessage::GetContentData()
 	{
 		if (mContent->Identify == mContent->NextIdentify)
 		{
-			mDataBuf = new char[mContent->DataLen];
+			mDataBuf = new char[mContent->DataLen + 1];
 			CopyMemory(mDataBuf, &(mContent->Data), mContent->DataLen);
+			mDataBuf[mContent->DataLen] = '\0';
 		}
 		else
 		{
 			int tmpLen = mBLen;
 			mDataBuf = new char[tmpLen];
+			ZeroMemory(mDataBuf, tmpLen);
 			char* bufPtr = mBuffer;
 			//FCIIContent* content = mContent;
 			//CopyMemory(mDataBuf, &(content->Data), content->DataLen);
@@ -94,4 +96,15 @@ char* MyDataMessage::GetContentData()
 		}
 	}
 	return mDataBuf;
+}
+
+
+bool MyDataMessage::GetJsonReaderForData(Json::Value &root)
+{
+	char* DataPtr = GetContentData();
+	if (DataPtr == NULL)
+		return false;
+	string tmpStr(DataPtr, mBLen);
+	Json::Reader reader;
+	return reader.parse(tmpStr, root);
 }

@@ -3,6 +3,7 @@
 
 #include "Symbols.h"
 #include "MyMessage.h"
+#include "json/json.h"
 
 enum MainCMDEnum
 {
@@ -11,7 +12,8 @@ enum MainCMDEnum
 
 enum ManagerSubCMDEnum
 {
-	M_SC_Heartbeat = 0
+	M_SC_Heartbeat = 0,
+	M_SC_Login
 };
 
 struct MYPROTOCOL_API FCIIContent
@@ -53,6 +55,9 @@ public:
 		//如果是多包的组合则只获得第一个包
 		return mContent;
 	}
+
+	bool GetJsonReaderForData(Json::Value &root);
+
 	int GetBufLen();
 
 	static bool IsMyDataMessage(const char* buffer,int bLen);

@@ -119,10 +119,10 @@ int MyProtocol::tryDeframeIncomingPacket(PushFramework::DataBuffer& buffer, Push
 			if (pMessage->IsFCIIData())
 			{
 				FCIIContent* contentPtr = pMessage->GetContent();
-				tmpBLen = contentPtr->DataLen + MyDataMessage::CONTENTLEN;
-				tmpBuffer = new char[tmpBLen + 1];
-				memcpy(tmpBuffer, contentPtr, tmpBLen);
-				tmpBuffer[tmpBLen] = '\0';
+				tmpBLen = contentPtr->DataLen + MyDataMessage::CONTENTLEN + 1;
+				tmpBuffer = new char[tmpBLen];
+				memcpy(tmpBuffer, contentPtr, tmpBLen - 1);
+				tmpBuffer[tmpBLen - 1] = '\0';
 				SAFE_DELETEPTR(pMessage);
 				delTag = true;
 			}
@@ -204,19 +204,26 @@ int MyProtocol::decodeIncomingPacket(PushFramework::IncomingPacket* pPacket, int
 
 int MyProtocol::encodeOutgoingPacket(PushFramework::OutgoingPacket& packet)
 {
-	MyMessage& message = (MyMessage&)packet;
-	switch (message.GetType())
+	if (&packet != NULL)
 	{
-	case MyMessage::WSHandshake:
-		return Protocol::Success;
-	case MyMessage::WSDataMessage:
-		return Protocol::Success;
-	case MyMessage::HeartbeatMessage:
-		return Protocol::Success;
-	case MyMessage::DataMessage:
-		return Protocol::Success;
-	default:
-		return Protocol::eUndefinedFailure;
+		MyMessage& message = (MyMessage&)packet;
+		switch (message.GetType())
+		{
+		case MyMessage::WSHandshake:
+			return Protocol::Success;
+		case MyMessage::WSDataMessage:
+			return Protocol::Success;
+		case MyMessage::HeartbeatMessage:
+			return Protocol::Success;
+		case MyMessage::DataMessage:
+			return Protocol::Success;
+		default:
+			return Protocol::eUndefinedFailure;
+		}
+	}
+	else
+	{
+		return Protocol::eInsufficientBuffer;
 	}
 }
 
