@@ -61,7 +61,8 @@ bool BaseHelper::GetByWhere(void** &ObjArr, int &ArrLen, string where, void** ar
 	{
 		//i << *(argArr[i]);
 	}
-	ObjArr = new void*[GetCount()];
+	//ObjArr = new void*[GetCount()];
+	ObjArr = new void*[2];
 	int index = 0;
 	while (!i.eof())
 	{
