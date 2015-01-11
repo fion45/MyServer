@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "UserDBHelper.h"
+#include "otlv4.h"
 
 UserDBHelper* UserDBHelper::mInstance = 0;
 CritSect UserDBHelper::mCritSect;
@@ -43,10 +44,17 @@ string UserDBHelper::BuildSQLStrForAddIn()
 
 string UserDBHelper::BuildSQLStrForUpdateSet()
 {
-
 	string result = "UID=:f1<int>,UserName=:f2<char[10000]>,LoginID=:f3<char[10000]>,LoginPSW=:f4<char[10000]>,Email=:f5<char[10000]>,"
 		"Sex=:f6<int>,DefaultAddrID=:f7<int>,Permission=:f8<char[10000]>,Gift=:f9<int>,QQOpenID=:f10<char[10000]>,QQAccessToken=:f11<char[10000]>,"
 		"WBID=:f12<char[10000]>,UserID=:f13<char[10000]>,LastLoginDT=:f14<char[10000]>";
+	return result;
+}
+
+string UserDBHelper::BuildSQLStrForSelect()
+{
+	string result = "UID:#1<int>,UserName:#2<char[10000]>,LoginID:#3<char[10000]>,LoginPSW:#4<char[10000]>,Email:#5<char[10000]>,"
+		"Sex:#6<int>,DefaultAddrID:#7<int>,Permission:#8<char[10000]>,Gift:#9<int>,QQOpenID:#10<char[10000]>,QQAccessToken:#11<char[10000]>,"
+		"WBID:#12<char[10000]>,UserID:#12<char[10000]>,LastLoginDT:#14<char[10000]>";
 	return result;
 }
 
@@ -55,40 +63,19 @@ void UserDBHelper::StreamToObj(otl_stream &stream, void* &obj)
 	SUser* user = new SUser();
 	char tmpCArr[MAXCHAR];
 	stream >> user->UID;
-	ZeroMemory(tmpCArr, MAXCHAR);
-	stream >> *tmpCArr;
-	user->UserName = string(tmpCArr);
-	ZeroMemory(tmpCArr, user->UserName.length());
-	stream >> *tmpCArr;
-	user->LoginID = string(tmpCArr);
-	ZeroMemory(tmpCArr, user->LoginID.length());
-	stream >> *tmpCArr;
-	user->LoginPSW = string(tmpCArr);
-	ZeroMemory(tmpCArr, user->LoginPSW.length());
-	stream >> *tmpCArr;
-	user->Email = string(tmpCArr);
-	ZeroMemory(tmpCArr, user->Email.length());
+	stream >> user->UserName;
+	stream >> user->LoginID;
+	stream >> user->LoginPSW;
+	stream >> user->Email;
 	stream >> user->Sex;
 	stream >> user->DefaultAddrID;
-	stream >> *tmpCArr;
-	user->Permission = string(tmpCArr);
-	ZeroMemory(tmpCArr, user->Permission.length());
+	stream >> user->Permission;
 	stream >> user->Gift;
-	stream >> *tmpCArr;
-	user->QQOpenID = string(tmpCArr);
-	ZeroMemory(tmpCArr, user->QQOpenID.length());
-	stream >> *tmpCArr;
-	user->QQAccessToken = string(tmpCArr);
-	ZeroMemory(tmpCArr, user->QQAccessToken.length());
-	stream >> *tmpCArr;
-	user->WBID = string(tmpCArr);
-	ZeroMemory(tmpCArr, user->WBID.length());
-	stream >> *tmpCArr;
-	user->UserID = string(tmpCArr);
-	ZeroMemory(tmpCArr, user->UserID.length());
-	stream >> *tmpCArr;
-	user->LastLoginDT = string(tmpCArr);
-	ZeroMemory(tmpCArr, user->LastLoginDT.length());
+	stream >> user->QQOpenID;
+	stream >> user->QQAccessToken;
+	stream >> user->WBID;
+	stream >> user->UserID;
+	stream >> user->LastLoginDT;
 	obj = user;
 }
 

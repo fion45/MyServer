@@ -10,7 +10,7 @@ struct DBHELPER_API SUser
 	string LoginID;
 	string LoginPSW;
 	string Email;
-	BYTE Sex;
+	short Sex;
 	int DefaultAddrID;
 	string Permission;
 	int Gift;
@@ -49,6 +49,8 @@ public:
 	virtual string BuildSQLStrForAddIn();
 
 	virtual string BuildSQLStrForUpdateSet();
+
+	virtual string BuildSQLStrForSelect();
 
 	virtual void StreamToObj(otl_stream &stream, void* &obj);
 

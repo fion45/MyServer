@@ -13,6 +13,8 @@ public:
 
 	virtual void SetColumnType(otl_stream &stream) = 0;
 
+	virtual string BuildSQLStrForSelect() = 0;
+
 	bool GetAll(void** &ObjArr, int &ArrLen);
 
 	bool GetByWhere(void** &ObjArr, int &ArrLen, string where, void** argArr, int argArrLen);

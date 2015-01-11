@@ -12,7 +12,9 @@
 #include <windows.h>
 
 #define OTL_ODBC_MSSQL_2008 // Compile OTL 4/ODBC, MS SQL 2008
-#define OTL_UNICODE
+//#define OTL_UNICODE
+#define OTL_STL // Turn on STL features
+#define OTL_ANSI_CPP // Turn on ANSI C++ typecasts
 #include "otlv4.h" // include the OTL 4.0 header file
 
 #include <iostream>

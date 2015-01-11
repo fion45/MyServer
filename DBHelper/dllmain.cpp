@@ -10,7 +10,7 @@ BOOL APIENTRY DllMain( HMODULE hModule,
 	{
 	case DLL_PROCESS_ATTACH:
 	{
-		otl_connect::otl_initialize(); // initialize ODBC environment
+		otl_connect::otl_initialize(1); // initialize ODBC environment
 		try
 		{
 			db.rlogon("UID=sa;PWD=1234;DSN=RGServer"); // connect to ODBC

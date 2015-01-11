@@ -35,7 +35,7 @@ bool BaseHelper::GetAll(void** &ObjArr, int &ArrLen)
 	otl_stream i;
 	SetColumnType(i); // use a int instead of default double
 	i.open(50, // buffer size
-		("SELECT * from " + mTableName).data(),
+		("SELECT " + BuildSQLStrForSelect() + " from " + mTableName).data(),
 		db // connect object
 		);
 	ObjArr = new void*[GetCount()];
@@ -54,23 +54,29 @@ bool BaseHelper::GetByWhere(void** &ObjArr, int &ArrLen, string where, void** ar
 	otl_stream i;
 	SetColumnType(i); // use a int instead of default double
 	i.open(500, // buffer size
-		("select * from " + mTableName + " where " + where).data(),
+		("select " + BuildSQLStrForSelect() + " from " + mTableName + " where " + where).data(),
 		db // connect object
 		);
 	for (int i = 0; i < argArrLen; i++)
 	{
 		//i << *(argArr[i]);
 	}
-	//ObjArr = new void*[GetCount()];
-	ObjArr = new void*[2];
-	int index = 0;
-	while (!i.eof())
+	if (i.good())
 	{
-		void* obj;
-		StreamToObj(i, obj);
-		ObjArr[index++] = obj;
+		ObjArr = new void*[2];
+		int index = 0;
+		while (!i.eof())
+		{
+			void* obj;
+			StreamToObj(i, obj);
+			ObjArr[index++] = obj;
+		}
+		return true;
 	}
-	return true;
+	else
+	{
+		return false;
+	}
 }
 
 bool BaseHelper::AddIn(void* &objArr, int ArrLen)
